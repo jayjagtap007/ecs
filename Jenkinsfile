@@ -1,5 +1,5 @@
 stage 'Checkout' 
- git 'https://github.com/jayjagtap007/jenkinsECS.git'
+ git 'https://github.com/jayjagtap007/ecs.git'
 
 
  stage ("Docker build") {
