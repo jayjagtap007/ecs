@@ -1,24 +1,20 @@
-FROM dockerfile/ubuntu
+FROM ubuntu:latest
 
-# Install Nginx.
-RUN \
-  add-apt-repository -y ppa:nginx/stable && \
-  apt-get update && \
-  apt-get install -y nginx && \
-  rm -rf /var/lib/apt/lists/* && \
-  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
-  chown -R www-data:www-data /var/lib/nginx
+MAINTAINER jayjagtap@gmail.com
 
-# Define mountable directories.
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
+RUN mkdir /opt/tomcat/
+RUN apt-get update && apt-get install vim curl openjdk-11-jdk -y
 
-# Define working directory.
-WORKDIR /etc/nginx
+WORKDIR /opt/tomcat
+RUN curl -O https://mirrors.estointernet.in/apache/tomcat/tomcat-9/v9.0.43/bin/apache-tomcat-9.0.43.tar.gz
+RUN tar xvfz apache-tomcat-9.0.43.tar.gz
+RUN mv apache-tomcat-9.0.43/* /opt/tomcat/.
+#RUN yum -y install java
 
-# Define default command.
-CMD ["nginx"]
+#RUN java -version
 
-# Expose ports.
+WORKDIR /opt/tomcat/webapps
+RUN curl -O -L https://github.com/AKSarav/SampleWebApp/raw/master/dist/SammpleWebApp.war
 EXPOSE 80
-EXPOSE 443
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
 
